@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Cow Sound – Tap the Photo</title>
+    <style>
+        /* ---------- RESET & BASE ---------- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f5f0e8 0%, #e8e0d5 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+            padding: 16px;
+        }
+
+        /* ---------- CARD ---------- */
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 252, 248, 0.92);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 48px 48px 32px 32px;
+            padding: 28px 24px 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12),
+                        0 8px 24px rgba(0, 0, 0, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            transition: transform 0.2s ease;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: scale(1.01);
+        }
+
+        /* ---------- HEADER ---------- */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .header .icon {
+            font-size: 28px;
+            line-height: 1;
+        }
+
+        .header h1 {
+            font-size: 22px;
+            font-weight: 600;
+            color: #3d2e1e;
+            letter-spacing: -0.3px;
+        }
+
+        .header .badge {
+            background: #b87c4b;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 40px;
+            letter-spacing: 0.3px;
+            margin-left: 4px;
+        }
+
+        /* ---------- IMAGE WRAPPER ---------- */
+        .image-wrapper {
+            position: relative;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+            background: #d9cdbc;
+            cursor: pointer;
+            transition: box-shadow 0.25s ease, transform 0.15s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        .image-wrapper:active {
+            transform: scale(0.98);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-wrapper img {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            transition: filter 0.25s ease;
+            background: #d9cdbc;
+        }
+
+        .image-wrapper:active img {
+            filter: brightness(0.96) saturate(1.05);
+        }
+
+        /* ---------- HINT / OVERLAY ---------- */
+        .tap-hint {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 18px;
+            color: #6b5a47;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+            transition: opacity 0.3s ease;
+        }
+
+        .tap-hint .hand {
+            font-size: 22px;
+            animation: point 1.6s infinite ease-in-out;
+        }
+
+        .tap-hint .sound-badge {
+            background: #e6d9cb;
+            padding: 4px 14px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #4f3e2d;
+        }
+
+        /* ---------- ANIMATIONS ---------- */
+        @keyframes point {
+            0%   { transform: translateY(0) rotate(0deg); }
+            50%  { transform: translateY(-6px) rotate(6deg); }
+            100% { transform: translateY(0) rotate(0deg); }
+        }
+
+        /* ---------- RESPONSIVE ---------- */
+        @media (max-width: 420px) {
+            .card {
+                padding: 20px 16px 24px;
+            }
+            .header h1 {
+                font-size: 19px;
+            }
+            .tap-hint {
+                font-size: 14px;
+                flex-wrap: wrap;
+            }
+        }
+
+        /* ---------- ACCESSIBILITY ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            .tap-hint .hand {
+                animation: none;
+            }
+            .image-wrapper:active {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card" role="main" aria-label="Cow sound player">
+
+        <!-- Header -->
+        <div class="header">
+            <span class="icon">🐄</span>
+            <h1>ٌRainbow &nbsp;Cow</h1>
+            <span class="badge">🎵</span>
+        </div>
+
+        <!-- Clickable image -->
+        <div class="image-wrapper" id="cowImageWrapper" role="button" tabindex="0" aria-label="Tap to hear the cow sound">
+            <img
+                src="photos/Screenshot 2026-06-28 205245.png"
+                alt="A friendly brown and white cow looking at the camera"
+                loading="lazy"
+                decoding="async"
+                width="600"
+                height="600"
+            />
+        </div>
+
+        <!-- Hint -->
+        <div class="tap-hint">
+            <span class="hand">👆</span>
+            <span>Tap the photo to hear the cow</span>
+            <span class="sound-badge">🔊 MOO</span>
+        </div>
+
+        <!-- Hidden audio element -->
+        <audio id="cowSound" preload="auto" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none;">
+            <source src="voice/dragon-studio-cow-moo-1-472361.mp3" type="audio/mpeg" />
+            <source src="https://www.soundjay.com/animal/cow-moo-1.wav" type="audio/wav" />
+            <!-- Fallback text for very old browsers -->
+            Your browser does not support the audio element.
+        </audio>
+
+    </div>
+
+    <script>
+        (function() {
+            'use strict';
+
+            // ----- DOM refs -----
+            const wrapper = document.getElementById('cowImageWrapper');
+            const audio    = document.getElementById('cowSound');
+
+            // ----- Helper: play sound with fallback -----
+            function playCowSound(event) {
+                // Prevent default if it's a touch/click event
+                if (event) {
+                    event.preventDefault();   // stops any unwanted selection or context menu
+                }
+
+                // Reset audio to start from the beginning
+                audio.currentTime = 0;
+
+                // Try to play
+                const playPromise = audio.play();
+
+                if (playPromise !== undefined) {
+                    playPromise.catch(function(error) {
+                        // Autoplay was blocked or another error – show a silent fallback
+                        console.warn('🔇 Audio play failed:', error);
+
+                        // Optional: show a brief visual feedback
+                        const wrapper = document.getElementById('cowImageWrapper');
+                        if (wrapper) {
+                            wrapper.style.transition = 'filter 0.15s ease, transform 0.15s ease';
+                            wrapper.style.filter = 'brightness(1.08) saturate(1.1)';
+                            setTimeout(function() {
+                                wrapper.style.filter = '';
+                            }, 200);
+                        }
+                    });
+                }
+
+                // Haptic feedback (if supported) – enhances "touch" feeling
+                if (navigator.vibrate) {
+                    navigator.vibrate(12);
+                }
+            }
+
+            // ----- Attach events: click & touch -----
+            if (wrapper) {
+                // 1. Click (desktop + mobile fallback)
+                wrapper.addEventListener('click', playCowSound);
+
+                // 2. Touch (mobile) – we keep both to ensure reliable behaviour
+                wrapper.addEventListener('touchstart', function(e) {
+                    // Prevent double-firing on mobile (some devices fire both touch and click)
+                    e.preventDefault();
+                    playCowSound(e);
+                }, { passive: false });
+
+                // 3. Keyboard accessibility (Enter / Space)
+                wrapper.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        playCowSound(e);
+                    }
+                });
+
+                // 4. Provide a small visual feedback on hover (desktop)
+                wrapper.addEventListener('mouseenter', function() {
+                    wrapper.style.cursor = 'pointer';
+                });
+            }
+
+            // ----- Optional: preload sound on first user interaction (helps mobile) -----
+            function warmupAudio() {
+                if (audio && audio.readyState < 2) {
+                    audio.load();
+                }
+                // Remove listener after first interaction
+                document.removeEventListener('touchstart', warmupAudio);
+                document.removeEventListener('click', warmupAudio);
+            }
+
+            // Preload on first tap anywhere (improves responsiveness)
+            document.addEventListener('touchstart', warmupAudio, { once: true });
+            document.addEventListener('click', warmupAudio, { once: true });
+
+            // ----- Console info (optional) -----
+            console.log('🐄 Cow Sound ready – tap the photo to moo!');
+        })();
+    </script>
+
+</body>
+</html>
